@@ -8,12 +8,14 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
+import com.setu.biller.helpers.OnboardSetu;
 import com.setu.biller.helpers.SetuJwtHelper;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -21,22 +23,9 @@ public class BillerApplication {
 
 	public static void main(final String[] args) {
 		SpringApplication.run(BillerApplication.class, args);
-		
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+		ctx.register(OnboardSetu.class);
+		ctx.refresh();
+		ctx.close();
 	}
-
-	@Bean
-	public CommandLineRunner commandLineRunner(final ApplicationContext ctx) {
-		return args -> {
-
-			System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-			final String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			for (final String beanName : beanNames) {
-				System.out.println(beanName);
-			}
-
-		};
-	}
-
 }

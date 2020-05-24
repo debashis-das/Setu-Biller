@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -41,20 +42,21 @@ public class SetuJwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         setup();
-        System.out.println("HERE---------------->");
         final String requestTokenHeader = request.getHeader("Authorization");
-        System.out.println("TOKEN---------------->"+requestTokenHeader);
+        logger.info("TOKEN : "+requestTokenHeader);
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			try {
-				setuJwtHelper.verifyBearerToken(requestTokenHeader);
+                setuJwtHelper.verifyBearerToken(requestTokenHeader);
+                chain.doFilter(request, response);
+                return;
 			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
+                logger.warn("Unable to get JWT Token");
 			} catch (JWTVerificationException e) {
-				System.out.println("JWT Token has expired");
+                logger.warn("JWT Token has expired");
 			}
 		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
+            logger.warn("JWT Token does not begin with Bearer String");
         }
-        chain.doFilter(request, response);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 }

@@ -1,0 +1,27 @@
+{
+    "customerParameters" : [{
+            "attributeName" : "mobileNumber",
+            "displayName"   : "Mobile number",
+            "dataType"      : "string",
+            "minLength"     : 10,
+            "maxLength"     : 10,
+            "isMandatory"   : true
+        },
+        {
+            "attributeName" : "phoneNumber",
+            "displayName"   : "Phone number",
+            "dataType"      : "string",
+            "minLength"     : 10,
+            "maxLength"     : 10,
+            "isMandatory"   : false
+        },
+        {
+            "attributeName" : "mail",
+            "displayName"   : "Email Id",
+            "dataType"      : "string",
+            "minLength"     : 5,
+            "maxLength"     : 50,
+            "isMandatory"   : false
+        }
+    ]
+}

@@ -1,6 +1,6 @@
-package com.setu.biller.entities;
+package com.setu.biller.dtos;
 
-public class CustomerIdentifiers {
+public class CustomerIdentifier {
     
     String attributeName;
     String attributeValue;
