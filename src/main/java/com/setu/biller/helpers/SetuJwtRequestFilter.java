@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -22,20 +24,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class SetuJwtRequestFilter extends OncePerRequestFilter {
 
+    @Autowired
+    Environment environment;
+
     private SetuJwtHelper setuJwtHelper;
 
     private void setup(){
-        Properties properties = new Properties();
-        try {
-            File file = ResourceUtils.getFile("classpath:biller-auth.properties");
-            InputStream in = new FileInputStream(file);
-            properties.load(in);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        setuJwtHelper = new SetuJwtHelper(properties.getProperty("secret"), properties.getProperty("schemedId"));
+        setuJwtHelper = new SetuJwtHelper(environment.getProperty("secret"), environment.getProperty("schemedId"));
     }
 
     @Override
