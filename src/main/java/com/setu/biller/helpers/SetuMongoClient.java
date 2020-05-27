@@ -65,7 +65,7 @@ public class SetuMongoClient {
             .codecRegistry(codecRegistry)
             .build();
             mongoClient =  MongoClients.create(clientSettings);
-            db = mongoClient.getDatabase("setu_biller");
+            db = mongoClient.getDatabase(database);
         }
     }
 
