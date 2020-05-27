@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+    mongo:
+        image: mongo
+        restart: unless-stopped
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: setu
+            MONGO_INITDB_ROOT_PASSWORD: setu
+    web:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        command: sleep infinity
+        links:
+            - mongo
