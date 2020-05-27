@@ -11,11 +11,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public class SetuMongoClient {
+
+    @Autowired
+    Environment environment;
 
     private static SetuMongoClient setuMongoClient;
     private MongoClient mongoClient;
@@ -45,12 +51,17 @@ public class SetuMongoClient {
             mongoAlive = false;
         }
         if(!mongoAlive){
+            String username = environment.getProperty("spring.data.mongodb.username");
+            String password = environment.getProperty("spring.data.mongodb.password");
+            String database = environment.getProperty("spring.data.mongodb.database");
+            String port = environment.getProperty("spring.data.mongodb.port");
+            String host = environment.getProperty("spring.data.mongodb.host");
             CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
             CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         
             final MongoClientSettings clientSettings = MongoClientSettings.builder()
             .applyConnectionString(
-                    new ConnectionString("mongodb://setu:setu@localhost:27017/?authSource=setu_biller"))
+                    new ConnectionString("mongodb://"+username+":"+password+"@"+host+":"+port+"/?authSource="+database))
             .codecRegistry(codecRegistry)
             .build();
             mongoClient =  MongoClients.create(clientSettings);
