@@ -56,11 +56,17 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<addResources>false</addResources>
-				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<includes>
+					<include>application.properties</include>
+					<include>biller-auth.properties</include>
+					<include>onboard.json</include>
+				</includes>
+			</resource>
+		  </resources>
 	</build>
 
 </project>
