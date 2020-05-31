@@ -13,29 +13,20 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-
+@Component
 public class SetuMongoClient {
 
     @Autowired
     Environment environment;
 
-    private static SetuMongoClient setuMongoClient;
     private MongoClient mongoClient;
     private MongoDatabase db;
     protected final Log logger = LogFactory.getLog(getClass());
-
-    private SetuMongoClient(){}
-
-    public static SetuMongoClient getInstance(){
-        if(setuMongoClient == null){
-            setuMongoClient = new SetuMongoClient();
-        }
-        return setuMongoClient;
-    }
 
     private void init(){
         boolean mongoAlive = true;

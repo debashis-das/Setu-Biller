@@ -30,7 +30,10 @@ public class BillResponse {
     String billerProductInstanceID;
     String amountExactness;
 
+    
+
     public static class BillResponseBuilder {
+
         Customer customer;
         Order order;
         Bill bill;
@@ -103,6 +106,68 @@ public class BillResponse {
                 + ", taxes=" + Arrays.toString(taxes) + "]";
     }
 
-    
+    public CustomerDto getCustomer() {
+        return customer;
+    }
+
+    public CustomerAccount getCustomerAccount() {
+        return customerAccount;
+    }
+
+    public Object getAggregates() {
+        return aggregates;
+    }
+
+    public Object[] getDiscounts() {
+        return discounts;
+    }
+
+    public Object[] getFees() {
+        return fees;
+    }
+
+    public Object[] getItems() {
+        return items;
+    }
+
+    public Object[] getTaxes() {
+        return taxes;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public String getBillerBillID() {
+        return billerBillID;
+    }
+
+    public String getGeneratedOn() {
+        return generatedOn;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public String getRecurrence() {
+        return recurrence;
+    }
+
+    public String getBillType() {
+        return billType;
+    }
+
+    public String getBillerCategory() {
+        return billerCategory;
+    }
+
+    public String getBillerProductInstanceID() {
+        return billerProductInstanceID;
+    }
+
+    public String getAmountExactness() {
+        return amountExactness;
+    }    
 
 }

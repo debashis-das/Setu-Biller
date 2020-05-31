@@ -37,6 +37,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private OnboardSetu onboardSetu;
 
+    @Autowired
+    SetuMongoClient setuMongoClient;
+
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Override
@@ -47,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
             return null;
         } else {
             final List<Customer> customers = setCustomerIfFound(customerIdentifiers);
-            if (customers.size() != 0) {
+            if (customers != null && customers.size() != 0) {
                 final Customer customer = customers.get(0);
                 final CustomerResponse response = setCustomerInResponse(customer);
                 final BillDetails billDetails = setBillDetailsOfCustomer(customer);
@@ -76,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private List<Customer> setCustomerIfFound(final CustomerIdentifiers customerIdentifiers) {
         List<Customer> customers = new ArrayList<>();
-        MongoCollection customerCollection = SetuMongoClient.getInstance().getMongoCollection("customer");
+        MongoCollection customerCollection = setuMongoClient.getMongoCollection("customer");
         BasicDBObject query = new BasicDBObject();
         for (final CustomerIdentifier temp : customerIdentifiers.getCustomerIdentifiers()) {
             query.append(temp.getAttributeName(), temp.getAttributeValue());
@@ -91,7 +94,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private List<Order> setUnPaidOrdersOfCustomer(final Customer customer) {
-        final MongoCollection orderCollection = SetuMongoClient.getInstance().getMongoCollection("order");
+        final MongoCollection orderCollection = setuMongoClient.getMongoCollection("order");
         final BasicDBObject queryOrder = new BasicDBObject();
         queryOrder.append("customerId", customer.get_id());
         queryOrder.append("paymentStatus", PaymentStatus.NOT_PAID.toString());
@@ -108,7 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
             final List<BillResponse> billResponses) {
         for (final Order order : orders) {
             logger.info("Order : " + orders.toString());
-            final MongoCollection billCollection = SetuMongoClient.getInstance().getMongoCollection("bill");
+            final MongoCollection billCollection = setuMongoClient.getMongoCollection("bill");
             final BasicDBObject queryBill = new BasicDBObject();
             queryBill.append("orderId", order.get_id());
             try (MongoCursor<Document> cursor = billCollection.find(queryBill).iterator()) {

@@ -36,18 +36,22 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Autowired
     Gson gson;
 
+    @Autowired
+    SetuMongoClient setuMongoClient;
+
+
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Override
     public ReceiptResponse saveCustomerReceipt(final ReceiptRequest receiptRequest) {
-        final MongoCollection billCollection = SetuMongoClient.getInstance().getMongoCollection("bill");
-        final MongoCollection orderCollection = SetuMongoClient.getInstance().getMongoCollection("order");
+        final MongoCollection billCollection = setuMongoClient.getMongoCollection("bill");
+        final MongoCollection orderCollection = setuMongoClient.getMongoCollection("order");
         Bill bill = fetchBillFromReceipt(receiptRequest,billCollection);
         Order order = fetchOrderFromReceipt(receiptRequest,orderCollection);
         logger.info("BILL : "+bill.toString());
         logger.info("Order : "+order.toString());
         if (bill != null && order != null && order.getPaymentStatus() != PaymentStatus.PAID) {
-            final MongoCollection paymentCollection = SetuMongoClient.getInstance().getMongoCollection("payment");
+            final MongoCollection paymentCollection = setuMongoClient.getMongoCollection("payment");
             final List<Payment> payments = fetchPreviousPayments(receiptRequest, paymentCollection);
             for(Payment temp : payments){
                 logger.info(temp.toString());
@@ -136,7 +140,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         final ReceiptGenerator receiptGenerator = new ReceiptGenerator.ReceiptGeneratorBuilder()
                 .receiptRequest(receiptRequest).build();
         paymentCollection.insertOne(receiptGenerator.getPayment());
-        final MongoCollection receiptCollection = SetuMongoClient.getInstance().getMongoCollection("receipt");
+        final MongoCollection receiptCollection = setuMongoClient.getMongoCollection("receipt");
         receiptCollection.insertOne(receiptGenerator.getPayment());
         return createReceiptResponse(receiptRequest, receiptGenerator);
     }
