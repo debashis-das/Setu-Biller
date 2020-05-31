@@ -52,7 +52,7 @@ public class SetuMongoClient {
         
             final MongoClientSettings clientSettings = MongoClientSettings.builder()
             .applyConnectionString(
-                    new ConnectionString("mongodb://"+username+":"+password+"@"+host+":"+port+"/"+database))
+                    new ConnectionString("mongodb://"+username+":"+password+"@"+host+":"+port+"/"+database+"?retryWrites=false"))
             .codecRegistry(codecRegistry)
             .build();
             mongoClient =  MongoClients.create(clientSettings);
